@@ -29,7 +29,7 @@ apply plugin: 'org.unbroken-dome.helm'
 apply plugin: 'org.unbroken-dome.helm-publish'
 
 group = 'org.salgar.akka.fsm'
-version = '1.1.0'
+version = '1.1.2'
 sourceCompatibility = '17'
 
 ext {
@@ -97,12 +97,12 @@ helm {
 		ac {
 			publish = true
 			chartName = 'address-check-application'
-			chartVersion = '1.1.0'
+			chartVersion = "${project.version}"
 			sourceDir = file('helm')
 			filtering {
 				values.put 'imageRepository', jib.to.image
 				values.put 'imageTag', jib.to.tags.first()
-				values.put 'appVersion', jib.to.tags.first()
+				values.put 'appVersion', "${jib.to.tags.first()}-${gitBranch()}"
 			}
 		}
 	}
@@ -128,4 +128,13 @@ helm {
 			}
 		}
 	}
+}
+
+def gitBranch() {
+	def branch = ""
+	def proc = "git rev-parse --abbrev-ref HEAD".execute()
+	proc.in.eachLine { line -> branch = line }
+	proc.err.eachLine { line -> println line }
+	proc.waitFor()
+	branch
 }
