@@ -49,5 +49,5 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
-          arguments: -Pversion=$SEMVER build
+          arguments: -Pversion=$SEMVER -PDOCKER_HUB_USER=$DOCKER_HUB_USER -PDOCKER_HUB_PASSWORD=$DOCKER_HUB_PASSWORD -PDOCKER_UPLOAD_USER=DOCKER_UPLOAD_USER -PDOCKER_UPLOAD_PASSWORD=DOCKER_UPLOAD_PASSWORD -PHELM_USER=$HELM_USER -PHELM_PASSWORD=HELM_PASSWORD build
 
