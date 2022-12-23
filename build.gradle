@@ -29,7 +29,6 @@ apply plugin: 'org.unbroken-dome.helm'
 apply plugin: 'org.unbroken-dome.helm-publish'
 
 group = 'org.salgar.akka.fsm'
-
 sourceCompatibility = '17'
 
 ext {
@@ -44,6 +43,7 @@ if(ext.flag) {
 			DOCKER_UPLOAD_PASSWORD: property('DOCKER_UPLOAD_PASSWORD'),
 			HELM_USER: property('HELM_USER'),
 			HELM_PASSWORD: property('HELM_PASSWORD')
+			HELM_DOWNLOAD_CLIENT: property('HELM_DOWNLOAD_CLIENT')
 	]
 }
 
@@ -93,6 +93,10 @@ jib {
 }
 
 helm {
+	downloadClient {
+		enabled = true
+		version = '3.4.1'
+	}
 	charts {
 		ac {
 			publish = true
