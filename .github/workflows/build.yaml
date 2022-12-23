@@ -31,6 +31,12 @@ jobs:
     needs: calculate-version
     env:
       SEMVER: ${{ needs.calculate-version.outputs.semVer }}
+      DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
+      DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      DOCKER_UPLOAD_USER: ${{ secrets.DOCKER_UPLOAD_USER }}
+      DOCKER_UPLOAD_PASSWORD: ${{ secrets.DOCKER_UPLOAD_PASSWORD }}
+      HELM_USER: ${{ secrets.HELM_USER }}
+      HELM_PASSWORD: ${{ secrets.HELM_PASSWORD }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK17
