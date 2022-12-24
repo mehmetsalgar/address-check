@@ -43,7 +43,8 @@ if(ext.flag) {
 			DOCKER_UPLOAD_PASSWORD: property('DOCKER_UPLOAD_PASSWORD'),
 			HELM_USER: property('HELM_USER'),
 			HELM_PASSWORD: property('HELM_PASSWORD'),
-			HELM_DOWNLOAD_CLIENT: property('HELM_DOWNLOAD_CLIENT')
+			HELM_DOWNLOAD_CLIENT: property('HELM_DOWNLOAD_CLIENT'),
+			HELM_PROCESS: property('HELM_PROCESS')
 	]
 }
 
@@ -91,44 +92,44 @@ jib {
 	}
 	allowInsecureRegistries = true
 }
-
-helm {
-	enabled = false
-	downloadClient {
-		enabled = true
-		version = '3.10.1'
-	}
-	charts {
-		ac {
-			publish = true
-			chartName = 'address-check-application'
-			chartVersion = "${project.version}"
-			sourceDir = file('helm')
-			filtering {
-				values.put 'imageRepository', jib.to.image
-				values.put 'imageTag', jib.to.tags.first()
-				values.put 'appVersion', "${jib.to.tags.first()}-${gitBranch()}"
+if(props.HELM_PROCESS) {
+	helm {
+		downloadClient {
+			enabled = true
+			version = '3.10.1'
+		}
+		charts {
+			ac {
+				publish = true
+				chartName = 'address-check-application'
+				chartVersion = "${project.version}"
+				sourceDir = file('helm')
+				filtering {
+					values.put 'imageRepository', jib.to.image
+					values.put 'imageTag', jib.to.tags.first()
+					values.put 'appVersion', "${jib.to.tags.first()}-${gitBranch()}"
+				}
 			}
 		}
-	}
-	repositories {
-		ac_rep {
-			url 'http://fsmakka.salgar.org/repository/fsm-akka-helm/'
-			credentials {
-				username = "${props.HELM_USER}"
-				password = "${props.HELM_PASSWORD}"
-			}
-		}
-	}
-	publishing {
 		repositories {
-			nexus {
-				url = uri('http://fsmakka.salgar.org/')
-				repository = 'fsm-akka-helm'
-				apiVersion = 'v1'
+			ac_rep {
+				url 'http://fsmakka.salgar.org/repository/fsm-akka-helm/'
 				credentials {
 					username = "${props.HELM_USER}"
 					password = "${props.HELM_PASSWORD}"
+				}
+			}
+		}
+		publishing {
+			repositories {
+				nexus {
+					url = uri('http://fsmakka.salgar.org/')
+					repository = 'fsm-akka-helm'
+					apiVersion = 'v1'
+					credentials {
+						username = "${props.HELM_USER}"
+						password = "${props.HELM_PASSWORD}"
+					}
 				}
 			}
 		}
