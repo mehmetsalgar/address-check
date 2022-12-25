@@ -51,15 +51,15 @@ jobs:
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         env:
           ORG_GRADLE_PROJECT_version: ${{ env.SEMVER }}
+          ORG_GRADLE_PROJECT_DOCKER_HUB_USER: ${{ env.DOCKER_HUB_USER }}
+          ORG_GRADLE_PROJECT_DOCKER_HUB_PASSWORD: ${{ env.DOCKER_HUB_PASSWORD }}
+          ORG_GRADLE_PROJECT_DOCKER_UPLOAD_USER: ${{ env.DOCKER_UPLOAD_USER }}
+          ORG_GRADLE_PROJECT_DOCKER_UPLOAD_PASSWORD: ${{ env.DOCKER_UPLOAD_PASSWORD }}
+          ORG_GRADLE_PROJECT_HELM_USER: ${{ env.HELM_USER }}
+          ORG_GRADLE_PROJECT_HELM_PASSWORD: ${{ env.HELM_PASSWORD }}
         with:
           arguments: |
             build 
-            -PDOCKER_HUB_USER=$DOCKER_HUB_USER 
-            -PDOCKER_HUB_PASSWORD=$DOCKER_HUB_PASSWORD 
-            -PDOCKER_UPLOAD_USER=$DOCKER_UPLOAD_USER 
-            -PDOCKER_UPLOAD_PASSWORD=$DOCKER_UPLOAD_PASSWORD 
-            -PHELM_USER=$HELM_USER 
-            -PHELM_PASSWORD=$HELM_PASSWORD 
             -PHELM_DOWNLOAD_CLIENT=true 
             -PHELM_PROCESS=false
             --no-daemon
