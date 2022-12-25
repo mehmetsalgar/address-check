@@ -44,14 +44,16 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
+          cache: gradle
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        env:
+          ORG_GRADLE_PROJECT_version=$SEMVER
         with:
           arguments: |
             build 
-            -Pversion="$SEMVER" 
             -PDOCKER_HUB_USER=$DOCKER_HUB_USER 
             -PDOCKER_HUB_PASSWORD=$DOCKER_HUB_PASSWORD 
             -PDOCKER_UPLOAD_USER=$DOCKER_UPLOAD_USER 
@@ -60,4 +62,5 @@ jobs:
             -PHELM_PASSWORD=$HELM_PASSWORD 
             -PHELM_DOWNLOAD_CLIENT=true 
             -PHELM_PROCESS=false
+            --no-daemon
 
