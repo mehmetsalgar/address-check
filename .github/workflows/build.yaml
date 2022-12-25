@@ -1,29 +1,66 @@
-name: build
+name: Java / Gradle CI
 run-name: ${{ github.actor }}
-on: [push]
+on: [push, pull_request]
 jobs:
-  something:
+  calculate-version:
     runs-on: ubuntu-latest
+    outputs:
+      semVer: ${{ steps.gitversion.outputs.semVer }}
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '14'
-
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.9.7
         with:
           versionSpec: '5.x'
-
       - name: Determine Version
         id: gitversion
         uses: gittools/actions/gitversion/execute@v0.9.7
         with:
           useConfigFile: true
           configFilePath: GitVersion.yml
-
       - name: Display GitVersion ouput
         run: |
           echo "SemVer: $GITVERSION_SEMVER"
+  build:
+    runs-on: ubuntu-latest
+    needs: calculate-version
+    env:
+      SEMVER: ${{ needs.calculate-version.outputs.semVer }}
+      DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
+      DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      DOCKER_UPLOAD_USER: ${{ secrets.DOCKER_UPLOAD_USER }}
+      DOCKER_UPLOAD_PASSWORD: ${{ secrets.DOCKER_UPLOAD_PASSWORD }}
+      HELM_USER: ${{ secrets.HELM_USER }}
+      HELM_PASSWORD: ${{ secrets.HELM_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Display GitVersion ouput
+        run: |
+          echo "SemVer: $SEMVER"
+      - name: Set up JDK17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: gradle
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        env:
+          ORG_GRADLE_PROJECT_version: ${{ env.SEMVER }}
+          ORG_GRADLE_PROJECT_DOCKER_HUB_USER: ${{ env.DOCKER_HUB_USER }}
+          ORG_GRADLE_PROJECT_DOCKER_HUB_PASSWORD: ${{ env.DOCKER_HUB_PASSWORD }}
+          ORG_GRADLE_PROJECT_DOCKER_UPLOAD_USER: ${{ env.DOCKER_UPLOAD_USER }}
+          ORG_GRADLE_PROJECT_DOCKER_UPLOAD_PASSWORD: ${{ env.DOCKER_UPLOAD_PASSWORD }}
+          ORG_GRADLE_PROJECT_HELM_USER: ${{ env.HELM_USER }}
+          ORG_GRADLE_PROJECT_HELM_PASSWORD: ${{ env.HELM_PASSWORD }}
+        with:
+          arguments: |
+            build 
+            -PHELM_DOWNLOAD_CLIENT=true 
+            -PHELM_PROCESS=false
+            --no-daemon
+

@@ -24,12 +24,22 @@ plugins {
 	id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
+def helmProcess() {
+	if("true" == property("HELM_PROCESS"))
+		true
+	else
+		false
+}
+
+def downloadHelmClient() {
+	if("true" == property("HELM_DOWNLOAD_CLIENT"))
+		true
+	else
+		false
+}
 apply plugin: 'com.google.cloud.tools.jib'
-apply plugin: 'org.unbroken-dome.helm'
-apply plugin: 'org.unbroken-dome.helm-publish'
 
 group = 'org.salgar.akka.fsm'
-
 sourceCompatibility = '17'
 
 ext {
@@ -43,7 +53,8 @@ if(ext.flag) {
 			DOCKER_UPLOAD_USER: property('DOCKER_UPLOAD_USER'),
 			DOCKER_UPLOAD_PASSWORD: property('DOCKER_UPLOAD_PASSWORD'),
 			HELM_USER: property('HELM_USER'),
-			HELM_PASSWORD: property('HELM_PASSWORD')
+			HELM_PASSWORD: property('HELM_PASSWORD'),
+			HELM_DOWNLOAD_CLIENT: property('HELM_DOWNLOAD_CLIENT')
 	]
 }
 
@@ -65,6 +76,13 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
+task printVersion {
+	doLast {
+		logger.lifecycle("Version:  ${project.version}")
+	}
+}
+tasks.build.dependsOn tasks.printVersion
 
 tasks.named('test') {
 	useJUnitPlatform()
@@ -92,38 +110,47 @@ jib {
 	allowInsecureRegistries = true
 }
 
-helm {
-	charts {
-		ac {
-			publish = true
-			chartName = 'address-check-application'
-			chartVersion = "${project.version}"
-			sourceDir = file('helm')
-			filtering {
-				values.put 'imageRepository', jib.to.image
-				values.put 'imageTag', jib.to.tags.first()
-				values.put 'appVersion', "${jib.to.tags.first()}-${gitBranch()}"
+if(helmProcess()) {
+	apply plugin: 'org.unbroken-dome.helm'
+	apply plugin: 'org.unbroken-dome.helm-publish'
+
+	helm {
+		downloadClient {
+			enabled = downloadHelmClient()
+			version = '3.10.1'
+		}
+		charts {
+			ac {
+				publish = true
+				chartName = 'address-check-application'
+				chartVersion = "${project.version}"
+				sourceDir = file('helm')
+				filtering {
+					values.put 'imageRepository', jib.to.image
+					values.put 'imageTag', jib.to.tags.first()
+					values.put 'appVersion', "${jib.to.tags.first()}-${gitBranch()}"
+				}
 			}
 		}
-	}
-	repositories {
-		ac_rep {
-			url 'http://fsmakka.salgar.org/repository/fsm-akka-helm/'
-			credentials {
-				username = "${props.HELM_USER}"
-				password = "${props.HELM_PASSWORD}"
-			}
-		}
-	}
-	publishing {
 		repositories {
-			nexus {
-				url = uri('http://fsmakka.salgar.org/')
-				repository = 'fsm-akka-helm'
-				apiVersion = 'v1'
+			ac_rep {
+				url 'http://fsmakka.salgar.org/repository/fsm-akka-helm/'
 				credentials {
 					username = "${props.HELM_USER}"
 					password = "${props.HELM_PASSWORD}"
+				}
+			}
+		}
+		publishing {
+			repositories {
+				nexus {
+					url = uri('http://fsmakka.salgar.org/')
+					repository = 'fsm-akka-helm'
+					apiVersion = 'v1'
+					credentials {
+						username = "${props.HELM_USER}"
+						password = "${props.HELM_PASSWORD}"
+					}
 				}
 			}
 		}
