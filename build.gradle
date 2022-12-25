@@ -77,6 +77,13 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+task printVersion {
+	doLast {
+		logger.lifecycle("Version:  ${project.version}")
+	}
+}
+tasks.build.dependsOn tasks.printVersion
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
@@ -109,7 +116,7 @@ if(helmProcess()) {
 
 	helm {
 		downloadClient {
-			enabled = false
+			enabled = downloadHelmClient()
 			version = '3.10.1'
 		}
 		charts {
