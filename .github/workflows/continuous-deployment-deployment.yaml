@@ -9,10 +9,19 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
       - name: Setup helmfile
         uses: mamezou-tech/setup-helmfile@v1.2.0
       - name: DoTemplate
         run: |
           echo 'Deploy Umbrella Chart for Service Pipeline'
           helmfile --version
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.PERSONAL_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+             owner: 'mehmetsalgar',
+             repo: 'fsm-akka-helm-umbrella-chart',
+             workflow_id: 'build.yml',
+             ref: 'master'
+            })
