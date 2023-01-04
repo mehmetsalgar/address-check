@@ -1,2 +1,2 @@
 Initial README
-We are improving the Workflow / Secret Fix / Set Trigger to dispatch
+We are improving the Workflow / Secret Fix / Set Trigger to dispatch / Trigger Type
