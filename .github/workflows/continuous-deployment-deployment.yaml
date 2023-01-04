@@ -5,14 +5,14 @@ on:
     branches: [development]
     types: [completed]
 
-  jobs:
-    deploy:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - name: Setup helmfile
-          uses: mamezou-tech/setup-helmfile@v1.2.0
-        - name: DoTemplate
-          run: |
-            echo 'Deploy Umbrella Chart for Service Pipeline'
-            helmfile --version
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup helmfile
+        uses: mamezou-tech/setup-helmfile@v1.2.0
+      - name: DoTemplate
+        run: |
+          echo 'Deploy Umbrella Chart for Service Pipeline'
+          helmfile --version
