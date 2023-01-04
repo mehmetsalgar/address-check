@@ -4,6 +4,7 @@ on:
     workflows: [Java / Gradle CI]
     branches: [development]
     types: [completed]
+
   jobs:
     deploy:
       runs-on: ubuntu-latest
