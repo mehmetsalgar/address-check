@@ -22,6 +22,6 @@ jobs:
             await github.rest.actions.createWorkflowDispatch({
              owner: 'mehmetsalgar',
              repo: 'fsm-akka-helm-umbrella-chart',
-             workflow_id: 'Java / Gradle CI',
-             ref: 'master'
+             workflow_id: 'build.yaml',
+             ref: 'development'
             })
