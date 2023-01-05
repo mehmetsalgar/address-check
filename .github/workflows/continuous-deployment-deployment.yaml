@@ -27,8 +27,10 @@ jobs:
       #      })
       - name: Deploy Helm Umbrella Chart
         uses: aurelien-baudet/workflow-dispatch@v2
-        workflow: 'build.yaml'
-        repo: 'mehmetsalgar/fsm-akka-helm-umbrella-chart'
-        token: ${{ secrets.PERSONAL_TOKEN }}
-        wait-for-completion: true
-        wait-for-completion-timeout: 5m
+        with:
+          workflow: 'build.yaml'
+          repo: 'mehmetsalgar/fsm-akka-helm-umbrella-chart'
+          ref: 'development'
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          wait-for-completion: true
+          wait-for-completion-timeout: 5m
