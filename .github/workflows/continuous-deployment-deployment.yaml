@@ -34,3 +34,12 @@ jobs:
           token: ${{ secrets.PERSONAL_TOKEN }}
           wait-for-completion: true
           wait-for-completion-timeout: 5m
+      - name: Prepare Environment
+        uses: aurelien-baudet/workflow-dispatch@v2
+        with:
+          workflow: 'build.yaml'
+          repo: 'mehmetsalgar/fsm-akka-dev-environment'
+          ref: 'master'
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          wait-for-completion: true
+          wait-for-completion-timeout: 5m
