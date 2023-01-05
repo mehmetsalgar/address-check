@@ -15,13 +15,20 @@ jobs:
         run: |
           echo 'Deploy Umbrella Chart for Service Pipeline'
           helmfile --version
-      - uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.PERSONAL_TOKEN }}
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-             owner: 'mehmetsalgar',
-             repo: 'fsm-akka-helm-umbrella-chart',
-             workflow_id: 'build.yaml',
-             ref: 'development'
-            })
+      #- uses: actions/github-script@v6
+      #  with:
+      #    github-token: ${{ secrets.PERSONAL_TOKEN }}
+      #    script: |
+      #      await github.rest.actions.createWorkflowDispatch({
+      #       owner: 'mehmetsalgar',
+      #       repo: 'fsm-akka-helm-umbrella-chart',
+      #       workflow_id: 'build.yaml',
+      #       ref: 'development'
+      #      })
+      - name: Deploy Helm Umbrella Chart
+        uses: aurelien-baudet/workflow-dispatch@v2
+        workflow: 'build.yaml'
+        repo: 'mehmetsalgar/fsm-akka-helm-umbrella-chart'
+        token: ${{ secrets.PERSONAL_TOKEN }}
+        wait-for-completion: true
+        wait-for-completion-timeout: 5m
