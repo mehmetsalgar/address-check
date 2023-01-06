@@ -3,9 +3,13 @@ calculate-version:
   outputs:
     semVer: ${{ steps.gitversion.outputs.semVer }}
   steps:
+    - name: Display Branch
+      run: |
+        echo "Branch: $GITHUB_REF"
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
+        ref: ${{ github.ref }}
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v0.9.7
       with:
@@ -25,13 +29,6 @@ deploy:
   env:
     SEMVER: ${{ needs.calculate-version.outputs.semVer }}
   steps:
-    - name: Display Branch
-      run: |
-        echo "Branch: $GITHUB_REF"
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-        ref: ${{ github.ref }}
     - name: Deploy Helm Umbrella Chart
       uses: aurelien-baudet/workflow-dispatch@v2
       with:
