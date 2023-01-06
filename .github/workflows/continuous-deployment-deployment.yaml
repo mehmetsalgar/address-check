@@ -3,7 +3,7 @@ on:
   workflow_run:
     workflows: [Java / Gradle CI]
     branches: [development]
-    types: [completed]
+    types: [success]
 
 jobs:
   deploy:
