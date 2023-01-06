@@ -36,4 +36,4 @@ jobs:
           token: ${{ secrets.PERSONAL_TOKEN }}
           wait-for-completion: true
           wait-for-completion-timeout: 5m
-          inputs: {"source-repo": "address-check", "version": '${{ SEMVER }}'}
+          inputs: '"source-repo": "address-check", "version": "${{ SEMVER }}"}'
