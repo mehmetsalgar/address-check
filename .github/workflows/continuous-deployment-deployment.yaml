@@ -3,7 +3,7 @@ on:
   workflow_run:
     workflows: [Java / Gradle CI]
     branches: [development]
-    types: [completed]
+    types: [success]
 
 jobs:
   deploy:
@@ -39,7 +39,7 @@ jobs:
         with:
           workflow: 'prepare-environment.yaml'
           repo: 'mehmetsalgar/fsm-akka-dev-environment'
-          ref: 'master'
+          ref: 'bitnami'
           token: ${{ secrets.PERSONAL_TOKEN }}
           wait-for-completion: true
           wait-for-completion-timeout: 5m
