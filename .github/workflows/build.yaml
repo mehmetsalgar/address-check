@@ -36,6 +36,8 @@ jobs:
       HELM_PASSWORD: ${{ secrets.HELM_PASSWORD }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Display GitVersion ouput
         run: |
           echo "SemVer: $SEMVER"
