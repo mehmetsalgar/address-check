@@ -1,6 +1,7 @@
-next-version: 1.1.3
-mode: Mainline
-branches: {}
+mode: ContinuousDelivery
+branches:
+  release:
+    tag: 'rc'
 ignore:
   sha: []
 merge-message-formats: {}
