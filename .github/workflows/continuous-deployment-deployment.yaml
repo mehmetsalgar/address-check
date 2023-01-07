@@ -59,8 +59,3 @@ jobs:
           wait-for-completion: true
           wait-for-completion-timeout: 5m
           #inputs: '"source-repo": "address-check", "version": "${{ env.SEMVER }}"'
-
-          github:
-            event:
-              workflow_run:
-                head_branch:
