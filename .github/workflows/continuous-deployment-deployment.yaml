@@ -1,99 +1,61 @@
-calculate-version:
-  runs-on: ubuntu-latest
-  outputs:
-    semVer: ${{ steps.gitversion.outputs.semVer }}
-  steps:
-    - name: Display Branch
-      run: |
-        echo "Branch: $GITHUB_REF"
-    - uses: actions/checkout@v3
-      with:calculate-version:
-  runs-on: ubuntu-latest
-  outputs:
-    semVer: ${{ steps.gitversion.outputs.semVer }}
-  steps:
-    - name: Display Branch
-      run: |
-        echo "Branch: $GITHUB_REF"
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-        ref: ${{ github.ref }}
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.7
-      with:
-        versionSpec: '5.x'
-    - name: Determine Version
-      id: gitversion
-      uses: gittools/actions/gitversion/execute@v0.9.7
-      with:
-        useConfigFile: true
-        configFilePath: GitVersion.yml
-    - name: Display GitVersion ouput
-      run: |
-        echo "SemVer: $GITVERSION_SEMVER"
-deploy:
-  runs-on: ubuntu-latest
-  needs: calculate-version
-  env:
-    SEMVER: ${{ needs.calculate-version.outputs.semVer }}
-  steps:
-    - name: Deploy Helm Umbrella Chart
-      uses: aurelien-baudet/workflow-dispatch@v2
-      with:
-        workflow: 'build.yaml'
-        repo: 'mehmetsalgar/fsm-akka-helm-umbrella-chart'
-        ref: 'development'
-        token: ${{ secrets.PERSONAL_TOKEN }}
-        wait-for-completion: true
-        wait-for-completion-timeout: 5m
-    - name: Prepare Environment
-      uses: aurelien-baudet/workflow-dispatch@v2
-      with:
-        workflow: 'prepare-environment.yaml'
-        repo: 'mehmetsalgar/fsm-akka-dev-environment'
-        ref: 'bitnami'
-        token: ${{ secrets.PERSONAL_TOKEN }}
-        wait-for-completion: true
-        wait-for-completion-timeout: 5m
-        #inputs: '"source-repo": "address-check", "version": "${{ env.SEMVER }}"'
-        fetch-depth: 0
-        ref: ${{ github.ref }}
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.7
-      with:
-        versionSpec: '5.x'
-    - name: Determine Version
-      id: gitversion
-      uses: gittools/actions/gitversion/execute@v0.9.7
-      with:
-        useConfigFile: true
-        configFilePath: GitVersion.yml
-    - name: Display GitVersion ouput
-      run: |
-        echo "SemVer: $GITVERSION_SEMVER"
-deploy:
-  runs-on: ubuntu-latest
-  needs: calculate-version
-  env:
-    SEMVER: ${{ needs.calculate-version.outputs.semVer }}
-  steps:
-    - name: Deploy Helm Umbrella Chart
-      uses: aurelien-baudet/workflow-dispatch@v2
-      with:
-        workflow: 'build.yaml'
-        repo: 'mehmetsalgar/fsm-akka-helm-umbrella-chart'
-        ref: 'development'
-        token: ${{ secrets.PERSONAL_TOKEN }}
-        wait-for-completion: true
-        wait-for-completion-timeout: 5m
-    - name: Prepare Environment
-      uses: aurelien-baudet/workflow-dispatch@v2
-      with:
-        workflow: 'prepare-environment.yaml'
-        repo: 'mehmetsalgar/fsm-akka-dev-environment'
-        ref: 'bitnami'
-        token: ${{ secrets.PERSONAL_TOKEN }}
-        wait-for-completion: true
-        wait-for-completion-timeout: 5m
-        #inputs: '"source-repo": "address-check", "version": "${{ env.SEMVER }}"'
+name: Continuous Deployment - Development
+on:
+  workflow_run:
+    workflows: [Java / Gradle CI]
+    branches: [development]
+    types: [completed]
+
+jobs:
+  calculate-version:
+    runs-on: ubuntu-latest
+    outputs:
+      semVer: ${{ steps.gitversion.outputs.semVer }}
+    steps:
+      - name: Display Branch
+        run: |
+          echo "Branch: $GITHUB_REF"
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+          versionSpec: '5.x'
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.7
+        with:
+          useConfigFile: true
+          configFilePath: GitVersion.yml
+      - name: Display GitVersion ouput
+        run: |
+          echo "SemVer: $GITVERSION_SEMVER"
+  deploy:
+    runs-on: ubuntu-latest
+    needs: calculate-version
+    env:
+      SEMVER: ${{ needs.calculate-version.outputs.semVer }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Deploy Helm Umbrella Chart
+        uses: aurelien-baudet/workflow-dispatch@v2
+        with:
+          workflow: 'build.yaml'
+          repo: 'mehmetsalgar/fsm-akka-helm-umbrella-chart'
+          ref: 'development'
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          wait-for-completion: true
+          wait-for-completion-timeout: 5m
+      - name: Prepare Environment
+        uses: aurelien-baudet/workflow-dispatch@v2
+        with:
+          workflow: 'prepare-environment.yaml'
+          repo: 'mehmetsalgar/fsm-akka-dev-environment'
+          ref: 'bitnami'
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          wait-for-completion: true
+          wait-for-completion-timeout: 5m
+          #inputs: '"source-repo": "address-check", "version": "${{ env.SEMVER }}"'
