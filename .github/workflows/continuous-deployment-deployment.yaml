@@ -13,11 +13,11 @@ jobs:
     steps:
       - name: Display Branch
         run: |
-          echo "Branch: $GITHUB_REF"
+          echo "Branch: ${{ github.event.workflow_run.head_branch }}"
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: ${{ github.ref }}
+          ref: ${{ github.event.workflow_run.head_branch }}
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.9.7
         with:
@@ -59,3 +59,8 @@ jobs:
           wait-for-completion: true
           wait-for-completion-timeout: 5m
           #inputs: '"source-repo": "address-check", "version": "${{ env.SEMVER }}"'
+
+          github:
+            event:
+              workflow_run:
+                head_branch:
