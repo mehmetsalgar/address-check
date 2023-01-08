@@ -28,7 +28,7 @@ jobs:
         with:
           useConfigFile: true
           configFilePath: GitVersion.yml
-          additionalArguments: '"/b": "${{ github.event.workflow_run.head_branch }}"'
+          additionalArguments: '"/b" "${{ github.event.workflow_run.head_branch }}"'
       - name: Display GitVersion ouput
         run: |
           echo "SemVer: $GITVERSION_SEMVER"
