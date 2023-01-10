@@ -1,0 +1,13 @@
+name: Continuous Deployment - Pull Request
+on:
+  pull_request:
+    types:
+      - opened
+    branches:
+      - 'feature/**'
+jobs:
+  print-start:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "start"
