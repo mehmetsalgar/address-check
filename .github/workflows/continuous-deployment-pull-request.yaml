@@ -1,0 +1,60 @@
+name: Continuous Deployment - Pull Request
+on:
+  pull_request:
+    types:
+      - opened
+    branches:
+      - 'feature/**'
+job:
+  calculate-version:
+    runs-on: ubuntu-latest
+    outputs:
+      semVer: ${{ steps.gitversion.outputs.semVer }}
+    steps:
+      - name: Display Branch
+        run: |
+          echo "Branch: ${{ github.ref }}"
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+          fetch-depth: 0
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+          versionSpec: '5.x'
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.7
+        with:
+          useConfigFile: true
+          configFilePath: GitVersion.yml
+          additionalArguments: '"/b" "${{ github.event.workflow_run.head_branch }}"'
+      - name: Display GitVersion output
+        run: |
+          echo "SemVer: $GITVERSION_SEMVER"
+  create-branch-helm-umbrella:
+    runs-on: ubuntu-latest
+    needs: calculate-version
+    env:
+      SEMVER: ${{ needs.calculate-version.outputs.semVer }}
+    steps:
+      - name: Create Pull Request Branch Helm Umbrella Chart
+        uses: aurelien-baudet/workflow-dispatch@v2
+        with:
+          workflow: 'create-branch.yaml'
+          repo: 'mehmetsalgar/fsm-akka-helm-umbrella-chart'
+          ref: 'development'
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          wait-for-completion: true
+          wait-for-completion-timeout: 5m
+          inputs: '{"branch-name": "${{ github.ref }}-address-check"}'
+      - name: Deploy Helm Umbrella Chart
+        uses: aurelien-baudet/workflow-dispatch@v2
+        with:
+          workflow: 'build-with-parameter.yaml'
+          repo: 'mehmetsalgar/fsm-akka-helm-umbrella-chart'
+          ref: '${{ github.ref }}-address-check'
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          wait-for-completion: true
+          wait-for-completion-timeout: 5m
+          inputs: '{"source-repo": "address-check", "version-number", "${{ env.SEMVER }}"}'
