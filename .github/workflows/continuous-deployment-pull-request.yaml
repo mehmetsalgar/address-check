@@ -5,7 +5,7 @@ on:
       - opened
     branches:
       - 'feature/**'
-job:
+jobs:
   calculate-version:
     runs-on: ubuntu-latest
     outputs:
