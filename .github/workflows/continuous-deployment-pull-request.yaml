@@ -27,7 +27,7 @@ jobs:
         with:
           useConfigFile: true
           configFilePath: GitVersion.yml
-          additionalArguments: '"/b" "${{ github.event.pull_request.head_branch }}"'
+          additionalArguments: '"/b" "${{ github.event.pull_request.head.ref }}"'
       - name: Display GitVersion output
         run: |
           echo "SemVer: $GITVERSION_SEMVER"
@@ -46,7 +46,7 @@ jobs:
           token: ${{ secrets.PERSONAL_TOKEN }}
           wait-for-completion: true
           wait-for-completion-timeout: 5m
-          inputs: '{"branch-name": "${{ github.event.pull_request.head_branch}}-address-check"}'
+          inputs: '{"branch-name": "${{ github.event.pull_request.head.ref }}-address-check"}'
       - name: Deploy Helm Umbrella Chart
         uses: aurelien-baudet/workflow-dispatch@v2
         with:
