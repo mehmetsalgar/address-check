@@ -56,4 +56,4 @@ jobs:
           token: ${{ secrets.PERSONAL_TOKEN }}
           wait-for-completion: true
           wait-for-completion-timeout: 5m
-          inputs: '{"source-repo": "address-check", "version-number": "${{ env.SEMVER }}"}'
+          inputs: '{"branch-name": "${{ github.event.pull_request.head.ref }}-address-check", "source-repo": "address-check", "version-number": "${{ env.SEMVER }}"}'
