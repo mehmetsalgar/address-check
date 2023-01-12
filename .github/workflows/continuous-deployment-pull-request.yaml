@@ -57,3 +57,17 @@ jobs:
           wait-for-completion: true
           wait-for-completion-timeout: 10m
           inputs: '{"branch-name": "${{ github.event.pull_request.head.ref }}-address-check", "source-repo": "address-check", "version-number": "${{ env.SEMVER }}"}'
+  create-feature-environment-in-k8s:
+    runs-on: ubuntu-latest
+    needs: create-branch-helm-umbrella
+    steps:
+      - name: Create Future Environment in K8s
+        uses: aurelien-baudet/workflow-dispatch@v2
+        with:
+          workflow: 'build-environment.yaml'
+          repo: 'mehmetsalgar/fsm-akka-4eyes-argocd'
+          ref: 'master'
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          wait-for-completion: true
+          wait-for-completion-timeout: 5m
+          inputs: '{"branch-name": "${{ github.event.pull_request.head.ref }}-address-check"}'
