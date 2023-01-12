@@ -46,6 +46,7 @@ jobs:
           token: ${{ secrets.PERSONAL_TOKEN }}
           wait-for-completion: true
           wait-for-completion-timeout: 5m
+          wait-for-completion-interval: 30s
           inputs: '{"branch-name": "${{ github.event.pull_request.head.ref }}-address-check"}'
       - name: Deploy Helm Umbrella Chart
         uses: aurelien-baudet/workflow-dispatch@v2
@@ -56,6 +57,7 @@ jobs:
           token: ${{ secrets.PERSONAL_TOKEN }}
           wait-for-completion: true
           wait-for-completion-timeout: 10m
+          wait-for-completion-interval: 30s
           inputs: '{"branch-name": "${{ github.event.pull_request.head.ref }}-address-check", "source-repo": "address-check", "version-number": "${{ env.SEMVER }}"}'
   create-feature-environment-in-k8s:
     runs-on: ubuntu-latest
@@ -70,4 +72,5 @@ jobs:
           token: ${{ secrets.PERSONAL_TOKEN }}
           wait-for-completion: true
           wait-for-completion-timeout: 5m
+          wait-for-completion-interval: 30s
           inputs: '{"branch-name": "${{ github.event.pull_request.head.ref }}-address-check"}'
