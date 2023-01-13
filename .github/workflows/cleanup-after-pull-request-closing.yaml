@@ -2,8 +2,6 @@ name: Cleanup - Pull Request Closing
 on:
   pull_request:
     types: [closed]
-    branches:
-      - 'development'
 jobs:
   cleanup-umbrella-chart:
     runs-on: ubuntu-latest
