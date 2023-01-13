@@ -19,6 +19,7 @@ jobs:
           inputs: '{"branch-name": "${{ github.event.pull_request.head.ref }}-address-check"}'
   cleanup-dev-environment:
     runs-on: ubuntu-latest
+    needs: cleanup-umbrella-chart
     steps:
       - name: Create Pull Request Branch for dev-environment
         uses: aurelien-baudet/workflow-dispatch@v2
@@ -33,7 +34,7 @@ jobs:
           inputs: '{"branch-name": "${{ inputs.branch-name }}"}'
   remove-k8s-environment:
     runs-on: ubuntu-latest
-    needs: create-branch-helm-umbrella
+    needs: cleanup-dev-environment
     steps:
       - name: Create Future Environment in K8s
         uses: aurelien-baudet/workflow-dispatch@v2
