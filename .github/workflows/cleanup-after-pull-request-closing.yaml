@@ -31,7 +31,7 @@ jobs:
           wait-for-completion: true
           wait-for-completion-timeout: 5m
           wait-for-completion-interval: 30s
-          inputs: '{"branch-name": "${{ inputs.branch-name }}"}'
+          inputs: '{"branch-name": "${{ github.event.pull_request.head.ref }}-address-check"}'
   remove-k8s-environment:
     runs-on: ubuntu-latest
     needs: cleanup-dev-environment
