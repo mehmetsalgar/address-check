@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: cleanup-umbrella-chart
     steps:
-      - name: Create Pull Request Branch for dev-environment
+      - name: Clean dev-environment
         uses: aurelien-baudet/workflow-dispatch@v2
         with:
           workflow: 'delete-branch.yaml'
@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: cleanup-dev-environment
     steps:
-      - name: Create Future Environment in K8s
+      - name: Clean Environment in K8s
         uses: aurelien-baudet/workflow-dispatch@v2
         with:
           workflow: 'cleanup-environment.yaml'
