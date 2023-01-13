@@ -1,0 +1,50 @@
+name: Cleanup - Pull Request Closing
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - 'development'
+jobs:
+  cleanup-umbrella-chart:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clean Umbrella Helm Chart
+        uses: aurelien-baudet/workflow-dispatch@v2
+        with:
+          workflow: 'delete-branch.yaml'
+          repo: 'mehmetsalgar/fsm-akka-helm-umbrella-chart'
+          ref: 'master'
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          wait-for-completion: true
+          wait-for-completion-timeout: 10m
+          wait-for-completion-interval: 30s
+          inputs: '{"branch-name": "${{ github.event.pull_request.head.ref }}-address-check"}'
+  cleanup-dev-environment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Pull Request Branch for dev-environment
+        uses: aurelien-baudet/workflow-dispatch@v2
+        with:
+          workflow: 'delete-branch.yaml'
+          repo: 'mehmetsalgar/fsm-akka-dev-environment'
+          ref: 'master'
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          wait-for-completion: true
+          wait-for-completion-timeout: 5m
+          wait-for-completion-interval: 30s
+          inputs: '{"branch-name": "${{ inputs.branch-name }}"}'
+  remove-k8s-environment:
+    runs-on: ubuntu-latest
+    needs: create-branch-helm-umbrella
+    steps:
+      - name: Create Future Environment in K8s
+        uses: aurelien-baudet/workflow-dispatch@v2
+        with:
+          workflow: 'cleanup-environment.yaml'
+          repo: 'mehmetsalgar/fsm-akka-4eyes-argocd'
+          ref: 'master'
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          wait-for-completion: true
+          wait-for-completion-timeout: 5m
+          wait-for-completion-interval: 30s
+          inputs: '{"branch-name": "${{ github.event.pull_request.head.ref }}-address-check"}'
