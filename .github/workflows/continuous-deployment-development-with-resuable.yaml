@@ -12,5 +12,4 @@ jobs:
     with:
       repo-name: "address-check"
       branch-name: "${{ github.event.workflow_run.head_branch }}"
-    secrets:
       personal-token: ${{ secrets.PERSONAL_TOKEN }}
