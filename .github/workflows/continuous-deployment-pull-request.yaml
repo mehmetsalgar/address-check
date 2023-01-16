@@ -1,4 +1,5 @@
 name: Continuous Deployment - Pull Request
+run-name: ${{ github.actor }}
 on:
   pull_request:
     types: [opened]
