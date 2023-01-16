@@ -1,4 +1,4 @@
-name: Java / Gradle CI
+name: Reusable Java / Gradle CI
 run-name: ${{ github.actor }}
 on: [push]
 jobs:
