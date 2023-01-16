@@ -1,4 +1,5 @@
 name: Reusable Continuous Deployment - Development
+run-name: ${{ github.actor }}
 on:
   workflow_run:
     workflows: [Java / Gradle CI]
