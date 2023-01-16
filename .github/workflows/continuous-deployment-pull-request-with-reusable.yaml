@@ -1,4 +1,4 @@
-name: Continuous Deployment - Pull Request
+name: Continuous Deployment Caller - Pull Request
 run-name: ${{ github.actor }}
 on:
   pull_request:
