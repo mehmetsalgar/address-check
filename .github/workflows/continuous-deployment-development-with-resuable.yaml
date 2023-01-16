@@ -1,0 +1,13 @@
+name: Reusable Continuous Deployment - Development
+on:
+  workflow_run:
+    workflows: [Java / Gradle CI]
+    branches: [development]
+    types: [completed]
+
+jobs:
+  call-continuous-deployment-workflow:
+    uses: mehmetsalgar/fsm-akka-github-workflows/.github/workflows/build.yaml@master
+    with:
+      repo-name: "address-check"
+      branch-name: "${{ github.event.workflow_run.head_branch }}"
