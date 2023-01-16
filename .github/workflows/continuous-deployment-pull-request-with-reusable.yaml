@@ -10,5 +10,5 @@ jobs:
     uses: mehmetsalgar/fsm-akka-github-workflows/.github/workflows/continuous-deployment-pull-request.yaml@master
     with:
       repo-name: "address-check"
-      branch-name: "${{ github.event.workflow_run.head_branch }}"
+      branch-name: "${{ github.event.pull_request.head.ref }}"
     secrets: inherit
