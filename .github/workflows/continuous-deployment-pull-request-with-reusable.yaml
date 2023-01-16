@@ -1,0 +1,13 @@
+name: Continuous Deployment - Pull Request
+run-name: ${{ github.actor }}
+on:
+  pull_request:
+    types: [opened]
+    branches:
+      - 'development'
+jobs:
+  call-continuous-deployment-pull-request-workflow:
+    uses: mehmetsalgar/fsm-akka-github-workflows/.github/workflows/continuous-deployment-pull-request.yaml@master
+    with:
+      repo-name: "address-check"
+      branch-name: "${{ github.event.workflow_run.head_branch }}"

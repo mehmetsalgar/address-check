@@ -2,7 +2,7 @@ name: Continuous Deployment Caller - Development
 run-name: ${{ github.actor }}
 on:
   workflow_run:
-    workflows: [Java / Gradle CI]
+    workflows: [Java / Gradle CI Caller]
     branches: [development]
     types: [completed]
 
