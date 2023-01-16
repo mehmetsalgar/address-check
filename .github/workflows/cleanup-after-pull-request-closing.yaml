@@ -36,10 +36,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: cleanup-dev-environment
     steps:
-  create-infrastructure-in-k8s:
-    runs-on: ubuntu-latest
-    needs: create-branch-helm-umbrella
-    steps:
       - name: Clean Infrastructure Environment in K8s
         uses: aurelien-baudet/workflow-dispatch@v2
         with:
