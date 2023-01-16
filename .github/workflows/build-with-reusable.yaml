@@ -1,0 +1,6 @@
+name: Java / Gradle CI
+run-name: ${{ github.actor }}
+on: [push]
+jobs:
+  call-build-workflow:
+    uses: mehmetsalgar/fsm-akka-github-workflows/.github/workflows/build.yaml@master

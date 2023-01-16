@@ -1,6 +1,6 @@
 name: Java / Gradle CI
 run-name: ${{ github.actor }}
-on: [push]
+#on: [push]
 jobs:
   calculate-version:
     runs-on: ubuntu-latest
