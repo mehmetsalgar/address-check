@@ -3,4 +3,4 @@ We are improving the Workflow
 Secret Fix
 Set Trigger to dispatch
 Trigger Type
-git add / tag / 21
+git add / tag / 22
