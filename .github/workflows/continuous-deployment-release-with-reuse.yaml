@@ -3,7 +3,7 @@ run-name: ${{ github.actor }}
 on:
   workflow_run:
     workflows: [Java / Gradle CI Caller]
-    branches: [release*]
+    branches: [release/**]
     types: [completed]
 jobs:
   call-continuous-deployment-workflow:
