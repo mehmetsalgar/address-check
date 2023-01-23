@@ -1,5 +1,5 @@
 name: Cleanup Caller - Pull Request
-run-name: ${{ github.actor }}
+run-name: Cleanup Environments after Pull Request triggered via ${{ github.event_name }} by ${{ github.actor }}
 on:
   pull_request:
     types: [closed]

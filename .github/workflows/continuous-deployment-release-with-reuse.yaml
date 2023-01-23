@@ -1,5 +1,5 @@
 name: Continuous Deployment Caller - Release
-run-name: ${{ github.actor }}
+run-name: Continuous Deployment for Release triggered via ${{ github.event_name }} by ${{ github.actor }}
 on:
   workflow_run:
     workflows: [Java / Gradle CI Caller]
