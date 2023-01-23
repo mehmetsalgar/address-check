@@ -1,5 +1,5 @@
 name: Java / Gradle CI Caller
-run-name: ${{ github.actor }}
+run-name: Building with Gradle triggered via ${{ github.event_name }} by ${{ github.actor }}
 on: [push]
 jobs:
   call-build-workflow:
