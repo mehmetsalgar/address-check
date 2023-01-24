@@ -3,9 +3,12 @@ run-name: Release GA triggered via ${{ github.event_name }} by ${{ github.actor 
 on:
   workflow_dispatch:
 jobs:
-  release:
+  release-pre:
     runs-on: ubuntu-lastest
     steps:
       - name: Releasing
         run: |
           echo 'Releasing'
+  release:
+    needs: [release-pre]
+    uses: mehmetsalgar/fsm-akka-github-workflows/.github/workflows/build.yaml@master
