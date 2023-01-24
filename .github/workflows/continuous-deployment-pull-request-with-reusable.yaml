@@ -1,5 +1,5 @@
 name: Continuous Deployment Caller - Pull Request
-run-name: ${{ github.actor }}
+run-name: Continuous Deployment for Pull Request triggered via ${{ github.event_name }} by ${{ github.actor }}
 on:
   pull_request:
     types: [opened]
