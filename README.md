@@ -3,4 +3,4 @@ We are improving the Workflow
 Secret Fix
 Set Trigger to dispatch
 Trigger Type
-git add / tag / RC-13-4
+git add / tag / BF-9-1
