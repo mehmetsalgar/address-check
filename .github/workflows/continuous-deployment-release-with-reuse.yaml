@@ -12,5 +12,6 @@ jobs:
       repo-name: "address-check"
       branch-name: "${{ github.event.workflow_run.head_branch }}"
       umbrella-chart-base-branch-name: "master"
+      infrastructure-base-branch-name: "master"
       value-file: "value-release"
     secrets: inherit
