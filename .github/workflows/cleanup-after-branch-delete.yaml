@@ -1,0 +1,25 @@
+name: Cleanup after Branch Delete
+run-name: Cleanup after Branch Delete triggered via ${{ github.event_name }} by ${{ github.actor }}
+
+on:
+  delete:
+    branches:
+      - integration/**
+      - release/**
+jobs:
+  print-start:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - run: |
+          echo "start"
+  call-cleanup-workflow:
+    uses: mehmetsalgar/fsm-akka-github-workflows/.github/workflows/cleanup-after-pull-request-closing.yaml@master
+    needs: [print-start]
+    with:
+      repo-name: "address-check"
+      branch-name: "${{ github.ref }}"
+    secrets: inherit
