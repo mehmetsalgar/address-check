@@ -1,0 +1,27 @@
+stages:
+  - .pre
+  - build
+  - deploy
+
+services:
+  - docker:dind
+
+variables:
+  DOCKER_HOST: DOCKER_HOST=tcp://docker:2375
+  SOURCE_REPO: "address-check"
+  SERVICE_CHART_NAME: "address-check-application"
+  GRADLE_COMMAND: "--build-cache --no-daemon build -Pversion="
+  USE_CASE_1: "false"
+  USE_CASE_2: "false"
+  USE_CASE_3: "false"
+  USE_CASE_4: "false"
+  USE_CASE_5: "false"
+  USE_CASE_6: "false"
+  USE_CASE_7: "false"
+  USE_CASE_8: "false"
+  USE_CASE_9: "false"
+  USE_CASE_10: "false"
+
+include:
+  - project: 'org.salgar.fsm.akka/ci-cd-gitlab-pipelines'
+    file: '/composite/ci.yml'
