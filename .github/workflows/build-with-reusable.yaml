@@ -15,3 +15,7 @@ on:
 jobs:
   call-build-workflow:
     uses: mehmetsalgar/fsm-akka-github-workflows/.github/workflows/build.yaml@master
+    with:
+      native: false
+      chart-name: "address-check-application"
+    secrets: inherit
