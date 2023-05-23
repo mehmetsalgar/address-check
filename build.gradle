@@ -24,6 +24,9 @@ plugins {
 	id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
+apply plugin: 'org.unbroken-dome.helm'
+//apply plugin: 'org.unbroken-dome.helm-publish'
+
 def helmProcess() {
 	if("true" == property("HELM_PROCESS"))
 		true
@@ -112,52 +115,48 @@ jib {
 	allowInsecureRegistries = true
 }
 
-if(helmProcess()) {
-	apply plugin: 'org.unbroken-dome.helm'
-	//apply plugin: 'org.unbroken-dome.helm-publish'
-
-	helm {
-		downloadClient {
-			enabled = downloadHelmClient()
-			version = '3.10.1'
-		}
-		charts {
-			ac {
-				//publish = true
-				chartName = 'address-check-application'
-				chartVersion = "${project.version}"
-				sourceDir = file('helm')
-				filtering {
-					values.put 'imageRepository', jib.to.image
-					values.put 'imageTag', jib.to.tags.first()
-					values.put 'appVersion', "${jib.to.tags.first()}-${gitBranch()}"
-				}
+helm {
+	downloadClient {
+		enabled = downloadHelmClient()
+		version = '3.10.1'
+	}
+	charts {
+		ac {
+			//publish = true
+			chartName = 'address-check-application'
+			chartVersion = "${project.version}"
+			sourceDir = file('helm')
+			filtering {
+				values.put 'imageRepository', jib.to.image
+				values.put 'imageTag', jib.to.tags.first()
+				values.put 'appVersion', "${jib.to.tags.first()}-${gitBranch()}"
 			}
 		}
-		/*repositories {
-			ac_rep {
-				url 'http://fsmakka.salgar.org/repository/fsm-akka-helm/'
+	}
+	/*repositories {
+		ac_rep {
+			url 'http://fsmakka.salgar.org/repository/fsm-akka-helm/'
+			credentials {
+				username = "${props.HELM_USER}"
+				password = "${props.HELM_PASSWORD}"
+			}
+		}
+	}
+	publishing {
+		repositories {
+			nexus {
+				url = uri('http://fsmakka.salgar.org/')
+				repository = 'fsm-akka-helm'
+				apiVersion = 'v1'
 				credentials {
 					username = "${props.HELM_USER}"
 					password = "${props.HELM_PASSWORD}"
 				}
 			}
 		}
-		publishing {
-			repositories {
-				nexus {
-					url = uri('http://fsmakka.salgar.org/')
-					repository = 'fsm-akka-helm'
-					apiVersion = 'v1'
-					credentials {
-						username = "${props.HELM_USER}"
-						password = "${props.HELM_PASSWORD}"
-					}
-				}
-			}
-		}*/
-	}
+	}*/
 }
+
 
 def gitBranch() {
 	def branch = ""
