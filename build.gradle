@@ -11,7 +11,7 @@ buildscript {
 	dependencies {
 		classpath('com.google.cloud.tools:jib-native-image-extension-gradle:0.1.0')
 		classpath "org.unbroken-dome.gradle-plugins.helm:helm-plugin:1.7.0"
-		classpath "org.unbroken-dome.gradle-plugins.helm:helm-publish-plugin:1.7.0"
+		//classpath "org.unbroken-dome.gradle-plugins.helm:helm-publish-plugin:1.7.0"
 	}
 }
 
@@ -114,7 +114,7 @@ jib {
 
 if(helmProcess()) {
 	apply plugin: 'org.unbroken-dome.helm'
-	apply plugin: 'org.unbroken-dome.helm-publish'
+	//apply plugin: 'org.unbroken-dome.helm-publish'
 
 	helm {
 		downloadClient {
@@ -123,7 +123,7 @@ if(helmProcess()) {
 		}
 		charts {
 			ac {
-				publish = true
+				//publish = true
 				chartName = 'address-check-application'
 				chartVersion = "${project.version}"
 				sourceDir = file('helm')

@@ -13,5 +13,5 @@ jobs:
       branch-name: "${{ github.event.workflow_run.head_branch }}"
       umbrella-chart-base-branch-name: "master"
       infrastructure-base-branch-name: "master"
-      value-file: "value-release"
+      value-file: "values-release"
     secrets: inherit

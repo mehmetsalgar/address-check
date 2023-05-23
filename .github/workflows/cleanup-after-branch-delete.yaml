@@ -5,18 +5,8 @@ on:
     branches:
       - release/**
 jobs:
-  print-start:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - run: |
-          echo "start"
   call-cleanup-workflow:
     uses: mehmetsalgar/fsm-akka-github-workflows/.github/workflows/cleanup-for-service.yaml@master
-    needs: [print-start]
     with:
       repo-name: "address-check"
       branch-name: "${{ github.event.ref }}"
