@@ -3,7 +3,7 @@ run-name: Building with Gradle triggered via ${{ github.event_name }} by ${{ git
 on:
   push:
     branches:
-      - 'deployment'
+      - 'development'
       - 'release/**'
       - 'feature/**'
       - 'hotfix/**'
