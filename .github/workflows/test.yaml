@@ -1,10 +1,11 @@
 name: Test - Pull Request
 run-name: ${{ github.actor }}
 on:
-  pull_request:
-    types: [opened]
-    branches:
-      - 'development'
+  workflow_dispatch:
+#  pull_request:
+#    types: [opened]
+#    branches:
+#      - 'development'
 jobs:
   print-start:
     runs-on: ubuntu-latest
